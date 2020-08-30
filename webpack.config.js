@@ -7,11 +7,24 @@ module.exports = {
     mode: 'development',
     entry: {
         main: './index.js',
-        analytics: './analytics.js',
+        analytics: './analytics.js'
     },
     output: {
         filename: '[name].[contenthash].js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist')
+    },
+    resolve: {
+        alias: {
+            '@normalize': path.resolve(__dirname, 'node_modules/normalize.css')
+        }
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    },
+    devServer: {
+        port: 4200
     },
     plugins: [
         new CleanWebpackPlugin(),
