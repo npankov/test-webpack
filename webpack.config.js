@@ -99,6 +99,20 @@ module.exports = {
                 ],
             },
             {
+                test: /\.s[ac]ss$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: devMode,
+                            reloadAll: true,
+                        },
+                    },
+                    'css-loader',
+                    'sass-loader',
+                ],
+            },
+            {
                 test: /\.(png|svg|jpe?g|gif)$/,
                 use: ['file-loader'],
             },
