@@ -26,6 +26,8 @@ const optimization = () => {
     return config;
 }
 
+const filename = (extension) => prodMode ? `[name].${extension}` : `[name].[contenthash].${extension}`;
+
 module.exports = {
     context: path.resolve(__dirname,'src'),
     mode: 'development',
@@ -34,7 +36,7 @@ module.exports = {
         analytics: './analytics.js',
     },
     output: {
-        filename: '[name].[contenthash].js',
+        filename: filename('js'),
         path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
@@ -64,7 +66,7 @@ module.exports = {
             ]
         }),
         new MiniCssExtractPlugin({
-            filename: '[name].[contenthash].css',
+            filename: filename('css'),
         }),
     ],
     module: {
@@ -80,6 +82,20 @@ module.exports = {
                         },
                     },
                     'css-loader',
+                ],
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: devMode,
+                            reloadAll: true,
+                        },
+                    },
+                    'css-loader',
+                    'less-loader',
                 ],
             },
             {
