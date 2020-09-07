@@ -3,8 +3,28 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserWebpackPlugin = require('terser-webpack-plugin')
+
 const devMode = process.env.NODE_ENV === 'development';
-console.log('devMode:', devMode);
+const prodMode = !devMode;
+
+const optimization = () => {
+    const config = {
+        splitChunks: {
+            chunks: 'all',
+        }
+    }
+
+    if (prodMode) {
+        config.minimizer = [
+            new OptimizeCssAssetsWebpackPlugin(),
+            new TerserWebpackPlugin(),
+        ]
+    }
+
+    return config;
+}
 
 module.exports = {
     context: path.resolve(__dirname,'src'),
@@ -22,11 +42,7 @@ module.exports = {
             '@normalize': path.resolve(__dirname, 'node_modules/normalize.css'),
         }
     },
-    optimization: {
-        splitChunks: {
-            chunks: 'all',
-        }
-    },
+    optimization: optimization(),
     devServer: {
         port: 4200,
         hot: devMode,
@@ -35,6 +51,9 @@ module.exports = {
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './index.html',
+            minify: {
+                collapseWhitespace: prodMode,
+            }
         }),
         new CopyWebpackPlugin({
             patterns: [
