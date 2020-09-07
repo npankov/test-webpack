@@ -28,6 +28,25 @@ const optimization = () => {
 
 const filename = (extension) => prodMode ? `[name].${extension}` : `[name].[contenthash].${extension}`;
 
+const cssLoaders = (extra) => {
+    const loaders = [
+        {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+                hmr: devMode,
+                reloadAll: true,
+            },
+        },
+        'css-loader',
+    ];
+
+    if (extra) {
+        loaders.push(extra);
+    }
+
+    return loaders;
+}
+
 module.exports = {
     context: path.resolve(__dirname,'src'),
     mode: 'development',
@@ -73,44 +92,15 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: devMode,
-                            reloadAll: true,
-                        },
-                    },
-                    'css-loader',
-                ],
+                use: cssLoaders(),
             },
             {
                 test: /\.less$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: devMode,
-                            reloadAll: true,
-                        },
-                    },
-                    'css-loader',
-                    'less-loader',
-                ],
+                use: cssLoaders('less-loader'),
             },
             {
                 test: /\.s[ac]ss$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: devMode,
-                            reloadAll: true,
-                        },
-                    },
-                    'css-loader',
-                    'sass-loader',
-                ],
+                use: cssLoaders('sass-loader'),
             },
             {
                 test: /\.(png|svg|jpe?g|gif)$/,
