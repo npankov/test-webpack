@@ -85,6 +85,7 @@ module.exports = {
         port: 4200,
         hot: devMode,
     },
+    devtool: devMode ? 'source-map' : '',
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
